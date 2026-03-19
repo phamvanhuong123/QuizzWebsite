@@ -1,4 +1,4 @@
-import { userApi  } from "@/apis/userApi";
+import { userApi } from "@/apis/userApi";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,48 +15,45 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
-import { useState} from "react";
+import { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 function LoginForm() {
   const [hiddenPassword, setHiddenPassword] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     const formValues = {
-        email : formData.get('email')?.toString() || "",
-        password : formData.get('password')?.toString() || ""
-    }
-    
-    if(!formValues.email || !formValues.password){
+      email: formData.get("email")?.toString() || "",
+      password: formData.get("password")?.toString() || "",
+    };
+
+    if (!formValues.email || !formValues.password) {
       toast.error("Please fill in all required fields");
-      return
+      return;
     }
-    setLoading(true)
-    try{
-      const user = await userApi.login(formValues.email,formValues.password)
-     
-      if(!user){
-        toast.error("Invalid email or password")
-        return
+    setLoading(true);
+    try {
+      const user = await userApi.login(formValues.email, formValues.password);
+
+      if (!user) {
+        toast.error("Invalid email or password");
+        return;
       }
-      toast.success("Login success")
-      localStorage.setItem("token",user.token) 
-      navigate("/home")
+      toast.success("Login success");
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/home");
+    } catch {
+      toast.error("Server error");
+    } finally {
+      setLoading(false);
     }
-    catch{
-      toast.error("Server error")
-    }
-    finally{
-      setLoading(false)
-    }
-  
-  }
- 
+  };
+
   return (
     <Card className="w-full ">
       <CardHeader>
@@ -79,31 +76,34 @@ function LoginForm() {
               />
             </div>
             <div className="grid gap-2">
-              
-                <Label htmlFor="password">Password</Label>
-                <InputGroup>
-                  <InputGroupInput
-                    name="password"
-                    id="password"
-                    required
-                    type={!hiddenPassword ? "password" : "text"}
-                  />
+              <Label htmlFor="password">Password</Label>
+              <InputGroup>
+                <InputGroupInput
+                  name="password"
+                  id="password"
+                  required
+                  type={!hiddenPassword ? "password" : "text"}
+                />
 
-                  <InputGroupAddon
-                    className="cursor-pointer"
-                    align="inline-end"
-                    onClick={() => setHiddenPassword(!hiddenPassword)}
-                  >
-                    {hiddenPassword ? <FaEyeSlash /> : <IoEyeSharp />}
-                  </InputGroupAddon>
-                </InputGroup>
-            
+                <InputGroupAddon
+                  className="cursor-pointer"
+                  align="inline-end"
+                  onClick={() => setHiddenPassword(!hiddenPassword)}
+                >
+                  {hiddenPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                </InputGroupAddon>
+              </InputGroup>
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button disabled={loading} form="login-form" type="submit" className="w-full cursor-pointer">
+        <Button
+          disabled={loading}
+          form="login-form"
+          type="submit"
+          className="w-full cursor-pointer"
+        >
           Login
         </Button>
       </CardFooter>

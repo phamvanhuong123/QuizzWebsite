@@ -3,7 +3,7 @@ import {
   getDisplayName,
   getInitialLetter,
   getNameColor,
-} from "../utils/nameUtils";
+} from "../ResultDetail/utils/nameUtils";
 
 interface UserAvatarProps {
   fullName?: string | null;

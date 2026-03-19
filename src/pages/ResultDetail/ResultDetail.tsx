@@ -1,11 +1,11 @@
 import React from "react";
 import { useSearchParams } from "react-router";
-import Header from "./components/Header";
+import Header from "../Home/components/Header";
 import SummaryCard from "./components/SummaryCard";
 import AnswerReview from "./components/AnswerReview";
 import MobileStickyBar from "./components/MobileStickyBar";
 import LoadingState from "./components/LoadingState";
-import ErrorState from "./components/ErrorState";
+import ErrorState from "../common/ErrorState";
 import { useResultData } from "./hooks/useResultData";
 import { mockUser } from "./mockData/resultData";
 
