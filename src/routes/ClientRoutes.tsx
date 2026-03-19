@@ -13,7 +13,7 @@ function ClientRoutes() {
       <Route path="/register" element={<Auth />} />
       <Route path="/home" element={<Home />} />
       <Route path="/result-detail" element={<ResultDetail />} />
-      <Route path="/quiz" element={<Quiz />} />
+      <Route path="/quiz/:topicId" element={<Quiz />} />
 
       <Route path="*" element={<NotFound />} />
       <Route />
