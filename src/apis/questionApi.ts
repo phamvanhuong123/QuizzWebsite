@@ -1,15 +1,18 @@
 import instance from "@/utils/instanceAxios";
 
+const getByTopicId = async (topicId: string) => {
+  return await instance.get("questions", {
+    params: {
+      topicId: topicId,
+    },
+  });
+};
 
-const getQuestionByTopicId = async (topicId : string)=> {
-    const res = await instance.get("questions",{
-        params : {
-            topicId : topicId
-        }
-    })
-    return res.data
-}
+const getById = async (id: string) => {
+  return await instance.get(`questions/${id}`);
+};
 
 export const questionApi = {
-    getQuestionByTopicId
-}
+  getByTopicId,
+  getById,
+};

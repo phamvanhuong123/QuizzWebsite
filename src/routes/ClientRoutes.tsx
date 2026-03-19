@@ -3,7 +3,7 @@ import Auth from "../pages/Auth/Auth";
 import Home from "@/pages/Home/Home";
 import ResultDetail from "@/pages/ResultDetail/ResultDetail";
 import Quiz from "@/pages/Quiz/Quiz";
-import NotFound from "@/pages/StatePages/NotFound";
+import NotFound from "@/pages/common/NotFound";
 
 function ClientRoutes() {
   return (
