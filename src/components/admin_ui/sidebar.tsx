@@ -1,7 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 // Thêm icon X để đóng sidebar trên mobile
-import { School, Layers, HelpCircle, Users, LogOut, X } from 'lucide-react'; 
+import { School, Layers, HelpCircle, Users, X } from 'lucide-react'; 
 
 // --- BƯỚC QUAN TRỌNG: Khai báo Interface ---
 interface SidebarProps {

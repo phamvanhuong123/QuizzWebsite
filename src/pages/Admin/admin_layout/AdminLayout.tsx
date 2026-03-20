@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import Sidebar from '../../../components/admin_ui/sidebar';
-import Header from '../../../components/admin_ui/header';   
+import { Outlet } from 'react-router';
+import Sidebar from '@/components/admin_ui/sidebar';
+import Header from '@/components/admin_ui/header';   
 import { Menu } from 'lucide-react'; 
 
 const AdminLayout: React.FC = () => {
