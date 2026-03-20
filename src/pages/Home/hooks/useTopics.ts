@@ -11,8 +11,8 @@ export const useTopics = () => {
     const fetchTopics = async () => {
       try {
         setLoading(true);
-        const response = await topicApi.getAll();
-        setTopics(response.data);
+        const topicsData = await topicApi.getAll(); 
+        setTopics(topicsData);
       } catch (err) {
         setError("Failed to load topics");
         console.error(err);

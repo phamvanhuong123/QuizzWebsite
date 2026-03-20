@@ -15,6 +15,8 @@ export interface ApiTopic {
   abridger: string;
   description: string;
   questionCount: number;
+  durationHours: number;
+  durationMinutes: number;
 }
 
 export interface ApiQuestion {

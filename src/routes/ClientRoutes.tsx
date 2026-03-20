@@ -4,7 +4,7 @@ import Home from "@/pages/Home/Home";
 import ResultDetail from "@/pages/ResultDetail/ResultDetail";
 import Quiz from "@/pages/Quiz/Quiz";
 import AdminLayout from "@/pages/Admin/admin_layout/AdminLayout";
-import Topics from "@/pages/Admin/admin_page/Topics";
+import Topics from "@/pages/Admin/admin_page/admin_TopicPages/Topics";
 import Questions from "@/pages/Admin/admin_page/Questions";
 import Users from "@/pages/Admin/admin_page/User";
 import NotFound from "@/components/common/NotFound";
