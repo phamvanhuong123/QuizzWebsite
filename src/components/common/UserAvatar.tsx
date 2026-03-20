@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  getDisplayName,
-  getInitialLetter,
-  getNameColor,
-} from "../ResultDetail/utils/nameUtils";
+import { getDisplayName, getInitialLetter } from "../../utils/nameUtils";
 
 interface UserAvatarProps {
   fullName?: string | null;
@@ -20,7 +16,6 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
 }) => {
   const displayName = getDisplayName(fullName);
   const initial = getInitialLetter(fullName);
-  const bgColor = getNameColor(fullName);
 
   const sizeClasses = {
     sm: "w-8 h-8 text-sm",
@@ -28,15 +23,13 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
     lg: "w-12 h-12 text-lg",
   };
 
+  // Class nền đen chữ trắng cho avatar
+  const baseAvatarClass = `${sizeClasses[size]} rounded-full flex items-center justify-center font-bold text-white bg-black`;
+
   if (showName) {
     return (
       <div className={`flex items-center gap-2 ${className}`}>
-        <div
-          className={`${sizeClasses[size]} rounded-full flex items-center justify-center font-bold text-white`}
-          style={{ backgroundColor: bgColor }}
-        >
-          {initial}
-        </div>
+        <div className={baseAvatarClass}>{initial}</div>
         <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
           {displayName}
         </span>
@@ -44,14 +37,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
     );
   }
 
-  return (
-    <div
-      className={`${sizeClasses[size]} rounded-full flex items-center justify-center font-bold text-white ${className}`}
-      style={{ backgroundColor: bgColor }}
-    >
-      {initial}
-    </div>
-  );
+  return <div className={`${baseAvatarClass} ${className}`}>{initial}</div>;
 };
 
 export default UserAvatar;
