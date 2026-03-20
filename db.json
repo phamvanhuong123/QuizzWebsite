@@ -83,13 +83,13 @@
   ],
   "topics": [
     {
-      "id": "t1",
       "name": "ReactJS Fundamentals",
       "abridger": "RF",
       "description": "Kiểm tra kiến thức cơ bản về React, Hooks và Component Lifecycle.",
-      "questionCount": 5,
       "durationHours": 1,
-      "durationMinutes": 30
+      "questionCount": 5,
+      "durationMinutes": 30,
+      "id": "t1"
     },
     {
       "id": "t2",
@@ -179,7 +179,12 @@
       "topicId": "t1",
       "correctAnswer": 1,
       "question": "Hook nào được sử dụng để gọi API khi Component vừa được render lần đầu tiên?",
-      "answers": ["useState", "useEffect", "useContext", "useMemo"]
+      "answers": [
+        "useState",
+        "useEffect",
+        "useContext",
+        "useMemo"
+      ]
     },
     {
       "id": "q2",
