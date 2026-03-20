@@ -42,7 +42,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
         {topic.description}
       </p>
       <button
-        onClick={() => navigate(`/quiz?topicId=${topic.id}`)}
+        onClick={() => navigate(`/quiz/${topic.id}`)}
         className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
       >
         Start Quiz <ArrowRight />

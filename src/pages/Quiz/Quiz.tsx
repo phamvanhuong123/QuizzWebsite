@@ -1,5 +1,4 @@
-
-import { ArrowLeft, ArrowRight, Lightbulb, Timer, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Timer, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -8,24 +7,62 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { questionApi } from "@/apis/questionApi";
 
+interface Question {
+  id: string;
+  topicId: string;
+  question: string;
+  answers: string[];
+  correctAnswer: number;
+}
+
+interface UserAnser {
+  idQuestion: string;
+  selectAnswer: number;
+}
+
+const answerLabels = ["A", "B", "C", "D"];
+
 function Quiz() {
-  const [dataQuestion,setDataQuestion] = useState([])
-  const {topicId} = useParams()
-  const options = [
-    { id: "A", text: "To manage local component state exclusively", selected: false },
-    { id: "B", text: "To perform side effects in function components", selected: true },
-    { id: "C", text: "To memoize expensive calculations for performance", selected: false },
-    { id: "D", text: "To create persistent refs for DOM elements", selected: false },
-  ];
+  const { topicId } = useParams();
+  const [dataQuestion, setDataQuestion] = useState<Question[]>([]);
+  const [userAnswers, setUserAnswers] = useState<UserAnser[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const selectedCurrentAnswer = userAnswers.find(answer => answer.idQuestion === dataQuestion[currentIndex].id)?.selectAnswer ?? null
+
+  const handleSelectAnswer = (index: number) => {
+    const selectUserAnswer: UserAnser = {
+      idQuestion: dataQuestion[currentIndex].id,
+      selectAnswer: index,
+    };
+    setUserAnswers((prevUserAnswer) => {
+      const fillterUserAnswer = prevUserAnswer.filter(
+        (answer) => answer.idQuestion !== dataQuestion[currentIndex].id,
+      );
+      return [...fillterUserAnswer, selectUserAnswer];
+    });
+  };
+
+  const handleClickNextQuestion = () => {
+    if (currentIndex === dataQuestion.length - 1) return;
+    const nexIndex = Math.min(currentIndex + 1, dataQuestion.length - 1);
+    setCurrentIndex(nexIndex);
+  };
+
+  const handleClickPrevQuestion = () => {
+    if (currentIndex === 0) return;
+    const prevIndex = Math.max(currentIndex - 1, 0);
+    setCurrentIndex(prevIndex);
+  };
 
   useEffect(() => {
     const fetchApi = async () => {
-      const result = await questionApi.getQuestionByTopicId(topicId || "")
-      setDataQuestion(result)
-    }
-    fetchApi()
-  },[setDataQuestion, topicId])
-  console.log(dataQuestion)
+      const result = await questionApi.getByTopicId(topicId || "");
+      setDataQuestion(result.data);
+    };
+    fetchApi();
+  }, [setDataQuestion, topicId]);
+
   return (
     <div className="min-h-screen bg-[#f8f6f6] dark:bg-[#221610] font-sans text-slate-900 dark:text-slate-100 flex flex-col">
       {/* Top Navigation Bar */}
@@ -45,10 +82,17 @@ function Quiz() {
 
           <div className="flex-1 max-w-md hidden md:block px-8">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-medium text-slate-500 text-muted-foreground">Progress</span>
-              <span className="text-xs font-bold text-[#ec5b13]">Question 3 of 10</span>
+              <span className="text-xs font-medium text-slate-500 text-muted-foreground">
+                Progress
+              </span>
+              <span className="text-xs font-bold text-[#ec5b13]">
+                Question {currentIndex + 1} of {dataQuestion.length}
+              </span>
             </div>
-            <Progress value={20} className="h-2" />
+            <Progress
+              value={((currentIndex + 1) / dataQuestion.length) * 100}
+              className="h-2 [&>div>div]:bg-[#ec5b13] [&>div>div]:transition-all [&>div>div]:duration-1000"
+            />
           </div>
 
           <Button variant="outline" className="flex items-center gap-2 h-9">
@@ -58,7 +102,10 @@ function Quiz() {
         </div>
         {/* Mobile Progress */}
         <div className="md:hidden w-full h-1">
-            <Progress value={30} className="h-1 rounded-none" />
+          <Progress
+            value={((currentIndex + 1) / dataQuestion.length) * 100}
+            className="h-1 rounded-none [&>div>div]:bg-[#ec5b13] [&>div>div]:transition-all [&>div>div]:duration-1000"
+          />
         </div>
       </header>
 
@@ -66,45 +113,52 @@ function Quiz() {
       <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
         <div className="w-full max-w-3xl">
           <Card className="border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden bg-white dark:bg-slate-900">
-          
-
             <CardContent className="p-6 md:p-10">
               <div className="mb-8">
-                <Badge variant="secondary" className="bg-[#ec5b13]/10 text-[#ec5b13] hover:bg-[#ec5b13]/10 rounded px-2 py-1 text-[10px] font-bold uppercase tracking-widest mb-4">
+                <Badge
+                  variant="secondary"
+                  className="bg-[#ec5b13]/10 text-[#ec5b13] hover:bg-[#ec5b13]/10 rounded px-2 py-1 text-[10px] font-bold uppercase tracking-widest mb-4"
+                >
                   Core Concepts
                 </Badge>
                 <h2 className="text-2xl md:text-3xl font-bold leading-tight text-slate-900 dark:text-slate-50">
-                  What is the primary purpose of the <span className="text-[#ec5b13]">useEffect</span> hook in React?
+                  {dataQuestion[currentIndex]?.question}
                 </h2>
               </div>
 
               {/* Answer Options */}
               <div className="grid gap-3 mb-4">
-                {options.map((option) => (
+                {dataQuestion[currentIndex]?.answers.map((answers, index) => (
                   <button
-                    key={option.id}
+                    onClick={() => handleSelectAnswer(index)}
                     className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all text-left group
-                      ${option.selected 
-                        ? "border-[#ec5b13] bg-[#ec5b13]/5 dark:bg-[#ec5b13]/10" 
-                        : "border-slate-200 dark:border-slate-800 hover:border-[#ec5b13]/50 hover:bg-[#ec5b13]/5"
+                      ${
+                        index === selectedCurrentAnswer
+                          ? "border-[#ec5b13] bg-[#ec5b13]/5 dark:bg-[#ec5b13]/10"
+                          : "border-slate-200 dark:border-slate-800 hover:border-[#ec5b13]/50 hover:bg-[#ec5b13]/5"
                       }`}
                   >
                     <div className="flex items-center gap-4">
-                      <span className={`flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm transition-colors
-                        ${option.selected 
-                          ? "bg-[#ec5b13] text-white" 
-                          : "bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-[#ec5b13]/20 group-hover:text-[#ec5b13]"
-                        }`}>
-                        {option.id}
+                      <span
+                        className={`flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm transition-colors
+                        ${
+                          index === selectedCurrentAnswer
+                            ? "bg-[#ec5b13] text-white"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-[#ec5b13]/20 group-hover:text-[#ec5b13]"
+                        }`}
+                      >
+                        {answerLabels[index]}
                       </span>
-                      <span className={`font-medium ${option.selected ? "text-slate-900 dark:text-white font-semibold" : "text-slate-700 dark:text-slate-300"}`}>
-                        {option.text}
+                      <span
+                        className={`font-medium ${index === selectedCurrentAnswer ? "text-slate-900 dark:text-white font-semibold" : "text-slate-700 dark:text-slate-300"}`}
+                      >
+                        {answers}
                       </span>
                     </div>
-                    {option.selected ? (
-                        <CheckCircle2 className="text-[#ec5b13] h-6 w-6" />
+                    {index === selectedCurrentAnswer ? (
+                      <CheckCircle2 className="text-[#ec5b13] h-6 w-6" />
                     ) : (
-                        <div className="h-6 w-6 rounded-full border-2 border-slate-200 dark:border-slate-700 group-hover:border-[#ec5b13]/50" />
+                      <div className="h-6 w-6 rounded-full border-2 border-slate-200 dark:border-slate-700 group-hover:border-[#ec5b13]/50" />
                     )}
                   </button>
                 ))}
@@ -112,28 +166,32 @@ function Quiz() {
             </CardContent>
 
             <CardFooter className="flex items-center justify-between p-6 md:px-10 border-t border-slate-100 dark:border-slate-800">
-              <Button variant="ghost" className="text-slate-500 hover:text-slate-900 flex items-center gap-2">
-                <Lightbulb className="h-4 w-4" />
-                <span>Need a hint?</span>
+              <Button
+                onClick={handleClickPrevQuestion}
+                variant="ghost"
+                className="cursor-pointer text-slate-500 hover:text-slate-900 flex items-center gap-2"
+              >
+                <ArrowLeft className="ml-2 h-5 w-5" />
+                Prev Question
               </Button>
-              <Button className="bg-[#ec5b13] hover:bg-[#ec5b13]/90 text-white font-bold px-8 py-6 rounded-xl shadow-lg shadow-[#ec5b13]/20">
-                Next Question
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              {currentIndex !== dataQuestion.length - 1 ? (
+                <Button
+                  onClick={handleClickNextQuestion}
+                  className="cursor-pointer bg-[#ec5b13] hover:bg-[#ec5b13]/90 text-white font-bold  rounded-xl shadow-lg shadow-[#ec5b13]/20"
+                >
+                  Next Question
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              ) : (
+                <Button
+                  className="cursor-pointer bg-[#ec5b13] hover:bg-[#ec5b13]/90 text-white font-bold  rounded-xl shadow-lg shadow-[#ec5b13]/20"
+                >
+                  Submit
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              )}
             </CardFooter>
           </Card>
-
-          {/* Shortcuts */}
-          <div className="mt-8 flex justify-center gap-6 text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest">
-            <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">1-4</kbd>
-              <span>Select Answer</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">Enter</kbd>
-              <span>Confirm</span>
-            </div>
-          </div>
         </div>
       </main>
 
