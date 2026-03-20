@@ -24,8 +24,7 @@ export const useResultData = (resultId: string) => {
         const submissionRes = await submissionApi.getById(resultId);
         const submission = submissionRes.data as ApiSubmission;
 
-        const topicsRes = await topicApi.getAll();
-        const topics = topicsRes.data as ApiTopic[];
+        const topics = (await topicApi.getAll()) as ApiTopic[];
         const topic = topics.find((t) => t.id === submission.topicId);
 
         const questionsRes = await questionApi.getByTopicId(submission.topicId);

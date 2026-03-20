@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { topicApi } from "@/apis/topicApi";
 import type { ApiTopic } from "@/types/api.types";
 import LoadingState from "@/components/common/LoadingState";
@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import FilterBar from "./components/FilterBar";
 import TopicTable from "./components/TopicTable";
 import TopicFormModal from "./components/TopicFormModal";
+import Pagination from "@/components/common/Pagination";
 
 const Topics: React.FC = () => {
   const [topics, setTopics] = useState<ApiTopic[]>([]);
@@ -17,6 +18,8 @@ const Topics: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTopic, setEditingTopic] = useState<ApiTopic | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const fetchTopics = async () => {
     try {
@@ -49,8 +52,21 @@ const Topics: React.FC = () => {
       });
     }
     setFilteredTopics(filtered);
+    setCurrentPage(1);
   }, [searchTerm, filterStatus, topics]);
 
+  const paginatedTopics = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredTopics.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredTopics, currentPage, itemsPerPage]);
+
+  const totalPages = Math.ceil(filteredTopics.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Handlers
   const handleAdd = () => {
     setEditingTopic(null);
     setModalOpen(true);
@@ -74,12 +90,18 @@ const Topics: React.FC = () => {
   const handleSubmit = async (data: Omit<ApiTopic, "id">) => {
     try {
       if (editingTopic) {
-        // Chỉ gửi các trường cần cập nhật, giữ nguyên questionCount
-        const { name, abridger, description } = data;
-        await topicApi.update(editingTopic.id, { name, abridger, description });
+        await topicApi.update(editingTopic.id, {
+          name: data.name,
+          abridger: data.abridger,
+          description: data.description,
+          durationHours: data.durationHours,
+          durationMinutes: data.durationMinutes,
+        });
       } else {
-        // Tạo mới với questionCount = 0
-        await topicApi.create({ ...data, questionCount: 0 });
+        await topicApi.create({
+          ...data,
+          questionCount: 0,
+        });
       }
       setModalOpen(false);
       fetchTopics();
@@ -105,11 +127,23 @@ const Topics: React.FC = () => {
           <p className="text-slate-500 dark:text-slate-400">No topics found.</p>
         </div>
       ) : (
-        <TopicTable
-          topics={filteredTopics}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <>
+          <TopicTable
+            topics={paginatedTopics}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              totalItems={filteredTopics.length}
+              itemsPerPage={itemsPerPage}
+              itemName="topics"
+            />
+          )}
+        </>
       )}
       <TopicFormModal
         isOpen={modalOpen}

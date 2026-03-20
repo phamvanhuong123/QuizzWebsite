@@ -13,7 +13,6 @@ const TopicTable: React.FC<TopicTableProps> = ({
   onEdit,
   onDelete,
 }) => {
-  // Xác định trạng thái dựa trên questionCount (tạm thời)
   const getStatus = (count: number) => (count > 0 ? "Active" : "Draft");
 
   return (
@@ -27,6 +26,9 @@ const TopicTable: React.FC<TopicTableProps> = ({
               </th>
               <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">
                 Questions
+              </th>
+              <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">
+                Duration
               </th>
               <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">
                 Status
@@ -43,6 +45,8 @@ const TopicTable: React.FC<TopicTableProps> = ({
                 status === "Active"
                   ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
                   : "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400";
+
+              const durationText = `${topic.durationHours}h ${topic.durationMinutes}m`;
 
               return (
                 <tr
@@ -66,6 +70,11 @@ const TopicTable: React.FC<TopicTableProps> = ({
                   <td className="px-6 py-4">
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400 whitespace-nowrap">
                       {topic.questionCount} items
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                      {durationText}
                     </span>
                   </td>
                   <td className="px-6 py-4">

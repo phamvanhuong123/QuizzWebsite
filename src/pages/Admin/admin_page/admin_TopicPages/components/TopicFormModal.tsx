@@ -19,6 +19,13 @@ const TopicFormModal: React.FC<TopicFormModalProps> = ({
     name: "",
     abridger: "",
     description: "",
+    durationHours: 0,
+    durationMinutes: 0,
+  });
+
+  const [errors, setErrors] = useState({
+    durationHours: "",
+    durationMinutes: "",
   });
 
   useEffect(() => {
@@ -27,22 +34,67 @@ const TopicFormModal: React.FC<TopicFormModalProps> = ({
         name: initialData.name,
         abridger: initialData.abridger,
         description: initialData.description,
+        durationHours: initialData.durationHours,
+        durationMinutes: initialData.durationMinutes,
       });
     } else {
-      setFormData({ name: "", abridger: "", description: "" });
+      setFormData({
+        name: "",
+        abridger: "",
+        description: "",
+        durationHours: 0,
+        durationMinutes: 0,
+      });
     }
+    setErrors({ durationHours: "", durationMinutes: "" });
   }, [initialData]);
+
+  const validateDuration = (hours: number, minutes: number): boolean => {
+    let isValid = true;
+    const newErrors = { durationHours: "", durationMinutes: "" };
+
+    if (isNaN(hours) || hours < 0 || !Number.isInteger(hours) || hours > 24) {
+      newErrors.durationHours = "Hours must be between 0 and 24, integer";
+      isValid = false;
+    }
+    if (
+      isNaN(minutes) ||
+      minutes < 0 ||
+      !Number.isInteger(minutes) ||
+      minutes >= 60
+    ) {
+      newErrors.durationMinutes = "Minutes must be between 0 and 59, integer";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "durationHours" || name === "durationMinutes") {
+      const intValue = parseInt(value, 10);
+      const newValue = isNaN(intValue) ? 0 : intValue;
+      setFormData((prev) => ({ ...prev, [name]: newValue }));
+      if (name === "durationHours") {
+        validateDuration(newValue, formData.durationMinutes);
+      } else {
+        validateDuration(formData.durationHours, newValue);
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Gửi kèm questionCount = 0, server sẽ quản lý sau
+    const { durationHours, durationMinutes } = formData;
+    if (!validateDuration(durationHours, durationMinutes)) {
+      return;
+    }
     onSubmit({ ...formData, questionCount: 0 });
   };
 
@@ -107,6 +159,59 @@ const TopicFormModal: React.FC<TopicFormModalProps> = ({
               className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/50 outline-none resize-none"
               placeholder="Brief description of the topic..."
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Duration (Hours)
+              </label>
+              <input
+                type="number"
+                name="durationHours"
+                value={formData.durationHours}
+                onChange={handleChange}
+                min="0"
+                max="24"
+                step="1"
+                className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl focus:ring-2 focus:ring-primary/50 outline-none ${
+                  errors.durationHours
+                    ? "border-red-500"
+                    : "border-slate-200 dark:border-slate-700"
+                }`}
+                placeholder="0-24"
+              />
+              {errors.durationHours && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.durationHours}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                Duration (Minutes)
+              </label>
+              <input
+                type="number"
+                name="durationMinutes"
+                value={formData.durationMinutes}
+                onChange={handleChange}
+                min="0"
+                max="59"
+                step="1"
+                className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl focus:ring-2 focus:ring-primary/50 outline-none ${
+                  errors.durationMinutes
+                    ? "border-red-500"
+                    : "border-slate-200 dark:border-slate-700"
+                }`}
+                placeholder="0-59"
+              />
+              {errors.durationMinutes && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.durationMinutes}
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
