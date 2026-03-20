@@ -1,6 +1,6 @@
 import React from "react";
 import { Bell, GraduationCap } from "lucide-react";
-import UserMenu from "@/pages/common/UserMenu";
+import UserMenu from "@/components/common/UserMenu";
 import type { User } from "@/utils/auth";
 
 interface HeaderProps {
