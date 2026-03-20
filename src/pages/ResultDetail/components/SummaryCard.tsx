@@ -10,17 +10,15 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ result }) => {
   const navigate = useNavigate();
 
   const handleRetake = () => {
-    navigate(`/quiz?topicId=${result.topicId}`);
+    navigate(`/quiz/${result.topicId}`);
   };
 
   const handleBackToHome = () => {
     navigate("/home");
   };
 
-  // Calculate rotation for progress circle
   const rotation = result.score * 1.8 - 45;
 
-  // Xác định màu sắc dựa trên điểm số
   const getScoreColor = () => {
     if (result.score >= 80) {
       return {

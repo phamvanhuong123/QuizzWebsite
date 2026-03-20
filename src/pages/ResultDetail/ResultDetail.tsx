@@ -5,17 +5,16 @@ import SummaryCard from "./components/SummaryCard";
 import AnswerReview from "./components/AnswerReview";
 import MobileStickyBar from "./components/MobileStickyBar";
 import LoadingState from "./components/LoadingState";
-import ErrorState from "../common/ErrorState";
+import ErrorState from "../../components/common/ErrorState";
 import { useResultData } from "./hooks/useResultData";
-import { mockUser } from "./mockData/resultData";
+import { getCurrentUser } from "@/utils/auth";
 
 const ResultDetail: React.FC = () => {
+  const user = getCurrentUser();
+
   const [searchParams] = useSearchParams();
   const resultId = searchParams.get("id") || "default-result-id";
   const { result, loading, error } = useResultData(resultId);
-
-  // Sử dụng mock user data - có thể thay bằng props hoặc context sau này
-  const user = mockUser;
 
   if (loading) {
     return <LoadingState />;
