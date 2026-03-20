@@ -4,7 +4,7 @@
       "id": "admin1",
       "fullName": "System Admin",
       "email": "admin@gmail.com",
-      "password": "123",
+      "password": "123a",
       "role": "admin",
       "token": "admin_token_xyz"
     },
@@ -12,7 +12,7 @@
       "id": "u1",
       "fullName": "Hương",
       "email": "huong@gmail.com",
-      "password": "123",
+      "password": "123a",
       "role": "user",
       "token": "user_token_abc"
     },
@@ -20,7 +20,7 @@
       "id": "u2",
       "fullName": "Phạm Văn Hà",
       "email": "ha.pham@gmail.com",
-      "password": "123",
+      "password": "123a",
       "role": "user",
       "token": "user_token_def"
     },
@@ -28,7 +28,7 @@
       "id": "u3",
       "fullName": "Nguyễn Minh Tuấn",
       "email": "tuan.nguyen@gmail.com",
-      "password": "123",
+      "password": "123s",
       "role": "user",
       "token": "user_token_ghi"
     },
@@ -36,7 +36,7 @@
       "id": "u4",
       "fullName": "Trần Thị Lan",
       "email": "lan.tran@gmail.com",
-      "password": "123",
+      "password": "123s",
       "role": "user",
       "token": "user_token_jkl"
     },
@@ -44,15 +44,15 @@
       "id": "u5",
       "fullName": "Lê Hoàng Bách",
       "email": "bach.le@gmail.com",
-      "password": "123",
-      "role": "user",
+      "password": "123d",
+      "role": "userdas",
       "token": "user_token_mno"
     },
     {
       "id": "u6",
       "fullName": "Đỗ Thu Trang",
       "email": "trang.do@gmail.com",
-      "password": "123",
+      "password": "123aaa",
       "role": "user",
       "token": "user_token_pqr"
     },
@@ -60,7 +60,7 @@
       "id": "u7",
       "fullName": "Vũ Hải Đăng",
       "email": "dang.vu@gmail.com",
-      "password": "123",
+      "password": "123ddd",
       "role": "user",
       "token": "user_token_stu"
     },
@@ -68,7 +68,7 @@
       "id": "u8",
       "fullName": "Bùi Ngọc Ánh",
       "email": "anh.bui@gmail.com",
-      "password": "123",
+      "password": "123d",
       "role": "user",
       "token": "user_token_vwx"
     },
