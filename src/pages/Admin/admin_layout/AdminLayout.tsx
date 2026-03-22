@@ -10,7 +10,7 @@ const AdminLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex relative">
       
-      {/* 1. Lớp nền mờ (Overlay) - Chỉ hiện trên mobile khi mở sidebar */}
+      {/* Lớp nền mờ (Overlay) - Chỉ hiện trên mobile khi mở sidebar */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] lg:hidden"
@@ -18,7 +18,7 @@ const AdminLayout: React.FC = () => {
         />
       )}
 
-      {/* 2. Sidebar - Dùng transform để trượt ra trượt vào */}
+      {/*  Sidebar - Dùng transform để trượt ra trượt vào */}
       <div className={`
         fixed inset-y-0 left-0 z-[70] w-64 transform transition-transform duration-300 ease-in-out
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -27,7 +27,7 @@ const AdminLayout: React.FC = () => {
         <Sidebar onClose={() => setSidebarOpen(false)} />
       </div>
 
-      {/* 3. Vùng nội dung chính */}
+      {/*  Vùng nội dung chính */}
       <main className="flex-1 min-w-0 flex flex-col">
         {/* Header tích hợp nút Menu cho mobile */}
         <div className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center px-4 lg:px-0">

@@ -1,120 +1,253 @@
-import React from 'react';
-import { Plus, Search, Mail, ShieldCheck, Edit2, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, ChevronLeft, ChevronRight, Loader2, X } from 'lucide-react'; 
+import { userApi } from '@/apis/userApi';
+
+interface TableUser {
+  id: string;
+  initials: string;
+  name: string;
+  email: string;
+  quizzes: number;
+  score: string | number;
+  status: string;
+}
 
 const Users: React.FC = () => {
-  // 1. Dữ liệu mẫu người dùng (Sau này bạn sẽ thay bằng dữ liệu thật từ API)
-  const users = [
-    { id: 1, name: 'Jane Cooper', email: 'jane.cooper@example.com', role: 'Super Admin', status: 'Verified', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jane' },
-    { id: 2, name: 'Cody Fisher', email: 'cody.fisher@example.com', role: 'Editor', status: 'Pending', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Cody' },
-    { id: 3, name: 'Esther Howard', email: 'esther.howard@example.com', role: 'User', status: 'Verified', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Esther' },
-    { id: 4, name: 'Jenny Wilson', email: 'jenny.wilson@example.com', role: 'Super Admin', status: 'Verified', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jenny' },
-  ];
+  const [usersData, setUsersData] = useState<TableUser[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  
+  const [selectedUser, setSelectedUser] = useState<TableUser | null>(null);
+
+  useEffect(() => {
+    const fetchUsersAndLeaderboard = async () => {
+      try {
+        setIsLoading(true);
+        const [usersRes, subsRes] = await Promise.all([
+          userApi.getAllUsers(),
+          userApi.getAllSubmissions()
+        ]);
+
+        const rawUsers = usersRes.data;
+        const rawSubmissions = subsRes.data;
+
+        const students = rawUsers.filter((u: any) => u.role !== 'admin');
+
+        const processedData = students.map((student: any) => {
+          const studentSubs = rawSubmissions.filter((sub: any) => sub.userId === student.id);
+          const quizzesCount = studentSubs.length;
+          
+          const avgScore = quizzesCount > 0 
+            ? Math.round(studentSubs.reduce((acc: number, curr: any) => acc + curr.scorePercentage, 0) / quizzesCount) 
+            : 0;
+
+          let status = 'slate';
+          if (quizzesCount > 0) {
+            if (avgScore >= 80) status = 'green';
+            else if (avgScore >= 50) status = 'yellow';
+            else status = 'red';
+          }
+
+          const nameParts = student.fullName.trim().split(' ');
+          const initials = nameParts.length > 1 
+            ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase()
+            : student.fullName.substring(0, 2).toUpperCase();
+
+          return {
+            id: student.id,
+            initials,
+            name: student.fullName,
+            email: student.email,
+            quizzes: quizzesCount,
+            score: quizzesCount > 0 ? `${avgScore}%` : 'N/A',
+            status
+          };
+        });
+
+        setUsersData(processedData);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu từ API:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUsersAndLeaderboard();
+  }, []);
+
+  const getScoreBadgeStyle = (status: string) => {
+    switch (status) {
+      case 'green': return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/50';
+      case 'yellow': return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-900/50';
+      case 'red': return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/50';
+      default: return 'bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700'; 
+    }
+  };
+
+  const filteredUsers = usersData.filter((user) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      user.email.toLowerCase().includes(searchLower) ||
+      user.name.toLowerCase().includes(searchLower)
+    );
+  });
 
   return (
-    <div className="space-y-6">
-      {/* 2. Header trang Users - Đã thêm Co dãn (Responsive) */}
-      {/* flex-col cho mobile, sm:flex-row cho màn hình lớn hơn */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="flex flex-col gap-6 relative">
+      
+      {/* Header & Search Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Users System</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Manage system users, administrators and their permissions</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Users Management</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage platform participants and view their profiles.</p>
         </div>
         
-        {/* Nút 'Invite New User' co dãn theo màn hình */}
-        <button className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-primary/25 w-full sm:w-auto flex-shrink-0">
-          <Plus size={20} />
-          <span>Invite New User</span>
-        </button>
-      </div>
-
-      {/* 3. Thanh Search & Filter - Đã thêm Co dãn */}
-      {/* Grid 1 cột trên mobile, lg:3 cột trên desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="relative lg:col-span-2">
+        <div className="relative w-full md:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
           <input 
             type="text" 
-            placeholder="Search by name, email..." 
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-sm transition-all outline-none"
+            placeholder="Search by email or name..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm outline-none shadow-sm"
           />
         </div>
-        <select className="bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-2 px-4 text-sm text-slate-600 dark:text-slate-400 focus:ring-2 focus:ring-primary/50 outline-none cursor-pointer">
-          <option>All Roles</option>
-          <option>Super Admin</option>
-          <option>Editor</option>
-          <option>User</option>
-        </select>
       </div>
-
-      {/* 4. Bảng danh sách Users - ĐÂY LÀ PHẦN QUAN TRỌNG NHẤT ĐỂ CO DÃN */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-        
-        {/* Lớp div bọc ngoài này cho phép bảng cuộn ngang trên mobile */}
-        <div className="overflow-x-auto">
-          
-          {/* min-w-[800px] buộc bảng giữ chiều rộng tối thiểu, không bị bóp méo cột */}
-          <table className="w-full text-left border-collapse min-w-[800px]">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+        <div className="overflow-x-auto flex-1">
+          <table className="w-full text-left border-collapse min-w-[700px]">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">User Information</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">System Role</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">Account Status</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider text-right">Actions</th>
+              <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">User ID</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Full Name</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Email</th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      {/* Avatar người dùng */}
-                      <img 
-                        src={user.avatar} 
-                        alt={user.name} 
-                        className="w-10 h-10 rounded-full ring-2 ring-slate-100 dark:ring-slate-700 shrink-0"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-slate-900 dark:text-white uppercase text-sm truncate">{user.name}</p>
-                        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-1">
-                          <Mail size={12} className="flex-shrink-0" />
-                          <span className="truncate">{user.email}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {/* Style riêng cho quyền Super Admin dùng màu Primary */}
-                    <div className={`inline-flex items-center gap-1.5 font-bold text-xs uppercase ${user.role === 'Super Admin' ? 'text-primary' : 'text-slate-600 dark:text-slate-400'} whitespace-nowrap`}>
-                      <ShieldCheck size={16} />
-                      <span>{user.role}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {/* Badge trạng thái xanh/vàng */}
-                    <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                      user.status === 'Verified' 
-                      ? 'bg-primary/10 text-primary' 
-                      : 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
-                    }`}>
-                      {user.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-1.5">
-                      <button className="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit">
-                        <Edit2 size={16} />
-                      </button>
-                      <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+            
+            {isLoading ? (
+              <tbody>
+                <tr>
+                  <td colSpan={4} className="px-6 py-20 text-center">
+                    <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-3" />
+                    <p className="text-sm text-slate-500">Loading user data...</p>
                   </td>
                 </tr>
-              ))}
-            </tbody>
+              </tbody>
+            ) : (
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                {filteredUsers.map((user, index) => (
+                  <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="px-6 py-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+                      #{user.id.toUpperCase()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary font-bold text-xs shrink-0">
+                          {user.initials}
+                        </div>
+                        <span className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                          {user.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                      {user.email}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button 
+                        onClick={() => setSelectedUser(user)}
+                        className="px-3 py-1.5 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                      >
+                        View Details
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                
+                {filteredUsers.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-500">
+                      No users found matching "{searchTerm}".
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            )}
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/20 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200 dark:border-slate-800">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Showing {filteredUsers.length > 0 ? 1 : 0} to {filteredUsers.length} of {usersData.length} total users
+          </p>
+          <div className="flex items-center gap-1.5">
+            <button className="p-1 border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-900 text-slate-300 dark:text-slate-600 cursor-not-allowed">
+              <ChevronLeft size={18} />
+            </button>
+            <button className="px-3 py-1 bg-primary text-white text-xs font-bold rounded">1</button>
+            <button className="p-1 border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Khối Modal View Details */}
+      {selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+            
+            <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/30">
+              <h3 className="font-bold text-slate-900 dark:text-white">Student Profile</h3>
+              <button 
+                onClick={() => setSelectedUser(null)}
+                className="p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary text-2xl font-bold shadow-inner">
+                  {selectedUser.initials}
+                </div>
+                <div className="text-center">
+                  <h4 className="text-xl font-bold text-slate-900 dark:text-white">{selectedUser.name}</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{selectedUser.email}</p>
+                  <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">ID: #{selectedUser.id}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-700/50">
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Total Quizzes</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{selectedUser.quizzes}</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl text-center border border-slate-100 dark:border-slate-700/50">
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Avg Score</p>
+                  <div className={`mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold border ${getScoreBadgeStyle(selectedUser.status)}`}>
+                    {selectedUser.score}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 text-right">
+              <button 
+                onClick={() => setSelectedUser(null)}
+                className="px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-semibold rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
+              >
+                Close Profile
+              </button>
+            </div>
+            
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 };

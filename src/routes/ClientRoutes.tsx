@@ -3,11 +3,11 @@ import Auth from "../pages/Auth/Auth";
 import Home from "@/pages/Home/Home";
 import ResultDetail from "@/pages/ResultDetail/ResultDetail";
 import Quiz from "@/pages/Quiz/Quiz";
-import NotFound from "@/pages/common/NotFound";
 import AdminLayout from "@/pages/Admin/admin_layout/AdminLayout";
 import Topics from "@/pages/Admin/admin_page/Topics";
 import Questions from "@/pages/Admin/admin_page/Questions";
-import Users from "@/pages/Admin/admin_page/user";
+import Users from "@/pages/Admin/admin_page/User";
+import NotFound from "@/components/common/NotFound";
 
 function ClientRoutes() {
   return (

@@ -157,9 +157,14 @@
     {
       "id": "q1",
       "topicId": "t1",
-      "correctAnswer": 1,
       "question": "Hook nào được sử dụng để gọi API khi Component vừa được render lần đầu tiên?",
-      "answers": ["useState", "useEffect", "useContext", "useMemo"]
+      "answers": [
+        "useState",
+        "useEffect",
+        "useContext",
+        "useMemo"
+      ],
+      "correctAnswer": 1
     },
     {
       "id": "q2",
@@ -280,11 +285,26 @@
       "scorePercentage": 80,
       "submittedAt": "2026-03-18T08:30:00Z",
       "answers": [
-        { "questionId": "q1", "selectedAnswer": 1 },
-        { "questionId": "q2", "selectedAnswer": 2 },
-        { "questionId": "q3", "selectedAnswer": 0 },
-        { "questionId": "q4", "selectedAnswer": 3 },
-        { "questionId": "q5", "selectedAnswer": 2 }
+        {
+          "questionId": "q1",
+          "selectedAnswer": 1
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q5",
+          "selectedAnswer": 2
+        }
       ]
     },
     {
@@ -296,11 +316,26 @@
       "scorePercentage": 100,
       "submittedAt": "2026-03-18T09:15:00Z",
       "answers": [
-        { "questionId": "q1", "selectedAnswer": 1 },
-        { "questionId": "q2", "selectedAnswer": 2 },
-        { "questionId": "q3", "selectedAnswer": 0 },
-        { "questionId": "q4", "selectedAnswer": 3 },
-        { "questionId": "q5", "selectedAnswer": 1 }
+        {
+          "questionId": "q1",
+          "selectedAnswer": 1
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q5",
+          "selectedAnswer": 1
+        }
       ]
     },
     {
@@ -312,11 +347,26 @@
       "scorePercentage": 40,
       "submittedAt": "2026-03-18T10:05:00Z",
       "answers": [
-        { "questionId": "q6", "selectedAnswer": 0 },
-        { "questionId": "q7", "selectedAnswer": 2 },
-        { "questionId": "q8", "selectedAnswer": 1 },
-        { "questionId": "q9", "selectedAnswer": 2 },
-        { "questionId": "q10", "selectedAnswer": 1 }
+        {
+          "questionId": "q6",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q7",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q8",
+          "selectedAnswer": 1
+        },
+        {
+          "questionId": "q9",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q10",
+          "selectedAnswer": 1
+        }
       ]
     },
     {
@@ -328,11 +378,26 @@
       "scorePercentage": 80,
       "submittedAt": "2026-03-18T10:30:00Z",
       "answers": [
-        { "questionId": "q6", "selectedAnswer": 1 },
-        { "questionId": "q7", "selectedAnswer": 2 },
-        { "questionId": "q8", "selectedAnswer": 0 },
-        { "questionId": "q9", "selectedAnswer": 3 },
-        { "questionId": "q10", "selectedAnswer": 2 }
+        {
+          "questionId": "q6",
+          "selectedAnswer": 1
+        },
+        {
+          "questionId": "q7",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q8",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q9",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q10",
+          "selectedAnswer": 2
+        }
       ]
     },
     {
@@ -344,12 +409,28 @@
       "scorePercentage": 20,
       "submittedAt": "2026-03-18T11:00:00Z",
       "answers": [
-        { "questionId": "q1", "selectedAnswer": 0 },
-        { "questionId": "q2", "selectedAnswer": 1 },
-        { "questionId": "q3", "selectedAnswer": 2 },
-        { "questionId": "q4", "selectedAnswer": 1 },
-        { "questionId": "q5", "selectedAnswer": 1 }
+        {
+          "questionId": "q1",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 1
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 1
+        },
+        {
+          "questionId": "q5",
+          "selectedAnswer": 1
+        }
       ]
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
