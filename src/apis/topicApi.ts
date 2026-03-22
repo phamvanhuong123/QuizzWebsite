@@ -20,7 +20,7 @@ const update = async (
   id: string,
   data: Partial<ApiTopic>,
 ): Promise<ApiTopic> => {
-  const res = await instance.put(`topics/${id}`, data);
+  const res = await instance.patch(`topics/${id}`, data);
   return res.data;
 };
 
