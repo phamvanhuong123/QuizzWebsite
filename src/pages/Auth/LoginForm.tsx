@@ -15,6 +15,8 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import { roles } from "@/constants/rolePermission";
+import type { User } from "@/utils/auth";
 import { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
@@ -38,15 +40,17 @@ function LoginForm() {
     }
     setLoading(true);
     try {
-      const user = await userApi.login(formValues.email, formValues.password);
-
+      const user : User = await userApi.login(formValues.email, formValues.password);
       if (!user) {
         toast.error("Invalid email or password");
         return;
       }
       toast.success("Login success");
       localStorage.setItem("user", JSON.stringify(user));
-      navigate("/home");
+      
+      if(user.role === roles.ADMIN) navigate('/admin')
+      else navigate('/home')
+
     } catch {
       toast.error("Server error");
     } finally {

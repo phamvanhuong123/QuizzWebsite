@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": "admin1",
+      "id": "admin",
       "fullName": "System Admin",
       "email": "admin@gmail.com",
       "password": "123a",

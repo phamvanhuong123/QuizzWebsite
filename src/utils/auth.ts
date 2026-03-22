@@ -1,3 +1,5 @@
+
+
 export interface User {
   id: string;
   fullName: string | null;
@@ -5,6 +7,8 @@ export interface User {
   role?: string;
   token?: string;
 }
+
+
 
 export const getCurrentUser = (): User | null => {
   const userStr = localStorage.getItem("user");
