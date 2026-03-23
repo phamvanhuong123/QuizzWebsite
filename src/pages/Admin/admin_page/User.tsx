@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronLeft, ChevronRight, Loader2, X } from 'lucide-react'; 
+import { Search, Loader2, X } from 'lucide-react'; 
 import { userApi } from '@/apis/userApi';
+import Pagination from '@/components/common/Pagination'; 
 
 interface TableUser {
   id: string;
@@ -16,8 +17,11 @@ const Users: React.FC = () => {
   const [usersData, setUsersData] = useState<TableUser[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
   const [selectedUser, setSelectedUser] = useState<TableUser | null>(null);
+
+  // 👇 2. Thêm state quản lý phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Bạn có thể đổi thành 10 tùy ý
 
   useEffect(() => {
     const fetchUsersAndLeaderboard = async () => {
@@ -75,6 +79,11 @@ const Users: React.FC = () => {
     fetchUsersAndLeaderboard();
   }, []);
 
+  // Reset về trang 1 mỗi khi người dùng gõ tìm kiếm
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const getScoreBadgeStyle = (status: string) => {
     switch (status) {
       case 'green': return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/50';
@@ -84,6 +93,7 @@ const Users: React.FC = () => {
     }
   };
 
+  // Lọc dữ liệu theo search term
   const filteredUsers = usersData.filter((user) => {
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -91,6 +101,13 @@ const Users: React.FC = () => {
       user.name.toLowerCase().includes(searchLower)
     );
   });
+
+  //  Tính toán dữ liệu hiển thị cho TRANG HIỆN TẠI
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="flex flex-col gap-6 relative">
@@ -113,6 +130,7 @@ const Users: React.FC = () => {
           />
         </div>
       </div>
+
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
         <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse min-w-[700px]">
@@ -136,7 +154,8 @@ const Users: React.FC = () => {
               </tbody>
             ) : (
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                {filteredUsers.map((user, index) => (
+                {/* Map qua paginatedUsers thay vì filteredUsers */}
+                {paginatedUsers.map((user, index) => (
                   <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-slate-500 dark:text-slate-400">
                       #{user.id.toUpperCase()}
@@ -176,25 +195,21 @@ const Users: React.FC = () => {
             )}
           </table>
         </div>
-
-        {/* Pagination Footer */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/20 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200 dark:border-slate-800">
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Showing {filteredUsers.length > 0 ? 1 : 0} to {filteredUsers.length} of {usersData.length} total users
-          </p>
-          <div className="flex items-center gap-1.5">
-            <button className="p-1 border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-900 text-slate-300 dark:text-slate-600 cursor-not-allowed">
-              <ChevronLeft size={18} />
-            </button>
-            <button className="px-3 py-1 bg-primary text-white text-xs font-bold rounded">1</button>
-            <button className="p-1 border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-              <ChevronRight size={18} />
-            </button>
+        {!isLoading && filteredUsers.length > 0 && (
+          <div className="px-6 py-2 bg-slate-50 dark:bg-slate-800/20 border-t border-slate-200 dark:border-slate-800">
+            <Pagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredUsers.length}
+              itemsPerPage={itemsPerPage}
+              itemName="users"
+            />
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Khối Modal View Details */}
+      {/* Khối Modal View Details*/}
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">

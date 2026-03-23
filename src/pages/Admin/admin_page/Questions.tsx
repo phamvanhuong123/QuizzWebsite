@@ -13,11 +13,12 @@ import {
 } from "lucide-react";
 import { questionApi } from "@/apis/questionApi";
 import { topicApi } from "@/apis/topicApi";
+import Pagination from "@/components/common/Pagination"; 
 
 interface Topic {
   id: string;
   name: string;
-  questionCount: number; // thêm để dùng
+  questionCount: number;
 }
 
 interface Question {
@@ -55,6 +56,9 @@ const getTopicColorClass = (topicId: string) => {
   );
 };
 
+// Cấu hình số item mỗi trang
+const ITEMS_PER_PAGE = 5;
+
 const Questions: React.FC = () => {
   const [questionsData, setQuestionsData] = useState<MappedQuestion[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -69,6 +73,9 @@ const Questions: React.FC = () => {
   const [formData, setFormData] = useState<Question>(initialFormState);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // State phân trang
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Hàm lấy dữ liệu (topics + questions)
   const fetchData = useCallback(async () => {
@@ -105,6 +112,11 @@ const Questions: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Reset về trang 1 mỗi khi search hoặc filter thay đổi
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedTopic]);
 
   // Helper: cập nhật số lượng câu hỏi của một topic
   const updateTopicCount = async (topicId: string, delta: number) => {
@@ -147,28 +159,22 @@ const Questions: React.FC = () => {
       const isEditing = !!formData.id;
 
       if (isEditing) {
-        // Lưu câu hỏi cũ trước khi cập nhật để biết topic cũ
         const oldQuestion = questionsData.find((q) => q.id === formData.id);
         const oldTopicId = oldQuestion?.topicId;
         const newTopicId = formData.topicId;
 
-        // Cập nhật câu hỏi
         await questionApi.update(formData.id, formData);
 
-        // Nếu đổi topic, cập nhật count cho cả hai topic
         if (oldTopicId && oldTopicId !== newTopicId) {
-          await updateTopicCount(oldTopicId, -1); // giảm topic cũ
-          await updateTopicCount(newTopicId, +1); // tăng topic mới
+          await updateTopicCount(oldTopicId, -1);
+          await updateTopicCount(newTopicId, +1);
         }
-        // Nếu không đổi topic, không cần thay đổi count (giữ nguyên)
       } else {
-        // Thêm mới
         const newId = `q${Date.now()}`;
         await questionApi.create({ ...formData, id: newId });
         await updateTopicCount(formData.topicId, +1);
       }
 
-      // Reload toàn bộ dữ liệu sau khi cập nhật
       await fetchData();
       setIsQuestionModalOpen(false);
     } catch (error) {
@@ -188,7 +194,6 @@ const Questions: React.FC = () => {
     if (!deletingId) return;
     try {
       setIsSubmitting(true);
-      // Lấy topicId trước khi xóa
       const questionToDelete = questionsData.find((q) => q.id === deletingId);
       if (questionToDelete) {
         await questionApi.remove(deletingId);
@@ -196,7 +201,16 @@ const Questions: React.FC = () => {
       } else {
         await questionApi.remove(deletingId);
       }
+      
       await fetchData();
+      
+      // Kiểm tra xem trang hiện tại còn dữ liệu không sau khi xóa
+      const newFilteredLength = filteredQuestions.length - 1;
+      const maxPage = Math.ceil(newFilteredLength / ITEMS_PER_PAGE);
+      if (currentPage > maxPage && maxPage > 0) {
+        setCurrentPage(maxPage);
+      }
+      
       setIsDeleteModalOpen(false);
     } catch (error) {
       console.error("Lỗi khi xóa:", error);
@@ -207,6 +221,7 @@ const Questions: React.FC = () => {
     }
   };
 
+  // 1. Lọc dữ liệu
   const filteredQuestions = questionsData.filter((q) => {
     const matchesSearch = q.question
       .toLowerCase()
@@ -216,7 +231,15 @@ const Questions: React.FC = () => {
     return matchesSearch && matchesTopic;
   });
 
-  // JSX giữ nguyên (không thay đổi)
+  // 2. Tính toán phân trang dựa trên dữ liệu đã lọc
+  const totalPages = Math.ceil(filteredQuestions.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  // Dữ liệu cắt ra để hiển thị trên bảng
+  const currentQuestions = filteredQuestions.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
+
   return (
     <div className="space-y-6 relative">
       {/* Header */}
@@ -272,22 +295,22 @@ const Questions: React.FC = () => {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-200">
+      {/* Table & Pagination Container */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+        <div className="overflow-x-auto flex-1">
+          <table className="w-full text-left border-collapse min-w-[700px]">
             <thead>
               <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider w-1/2">
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider w-1/2">
                   Question Text
                 </th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
                   Related Topic
                 </th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
                   Answers
                 </th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500 tracking-wider text-right">
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider text-right">
                   Actions
                 </th>
               </tr>
@@ -302,7 +325,7 @@ const Questions: React.FC = () => {
                     </p>
                   </td>
                 </tr>
-              ) : filteredQuestions.length === 0 ? (
+              ) : currentQuestions.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
@@ -312,7 +335,8 @@ const Questions: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                filteredQuestions.map((q) => (
+                // Lặp qua mảng currentQuestions (đã cắt theo trang)
+                currentQuestions.map((q) => (
                   <tr
                     key={q.id}
                     className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
@@ -362,6 +386,20 @@ const Questions: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Gọi component Pagination ở đây */}
+        {!isLoading && filteredQuestions.length > 0 && (
+          <div className="px-6 py-2 bg-slate-50 dark:bg-slate-800/20 border-t border-slate-200 dark:border-slate-800">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredQuestions.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              itemName="questions"
+            />
+          </div>
+        )}
       </div>
 
       {/* Modal Thêm/Sửa */}
