@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": "admin1",
+      "id": "admin",
       "fullName": "System Admin",
       "email": "admin@gmail.com",
       "password": "123a",
@@ -83,74 +83,94 @@
   ],
   "topics": [
     {
-      "id": "t1",
       "name": "ReactJS Fundamentals",
       "abridger": "RF",
       "description": "Kiểm tra kiến thức cơ bản về React, Hooks và Component Lifecycle.",
-      "questionCount": 5
+      "durationHours": 1,
+      "questionCount": 5,
+      "durationMinutes": 30,
+      "id": "t1"
     },
     {
       "id": "t2",
       "name": "ES6 JavaScript",
       "abridger": "EJ",
       "description": "Ôn tập các cú pháp hiện đại của ES6 như Arrow Function, Destructuring.",
-      "questionCount": 5
+      "questionCount": 5,
+      "durationHours": 1,
+      "durationMinutes": 0
     },
     {
       "id": "t3",
       "name": "Express.js & RESTful API",
       "abridger": "ERA",
       "description": "Kiểm tra kỹ năng thiết kế API, xử lý route và middleware trong Node.js.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 0,
+      "durationMinutes": 30
     },
     {
       "id": "t4",
       "name": "Java Spring Framework",
       "abridger": "JSF",
       "description": "Ôn tập về Dependency Injection, MVC và Spring Boot cơ bản.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 0,
+      "durationMinutes": 45
     },
     {
       "id": "t5",
       "name": "Software Design Patterns",
       "abridger": "SDP",
       "description": "Các mẫu thiết kế phần mềm phổ biến như Singleton, Factory, Observer.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 1,
+      "durationMinutes": 0
     },
     {
       "id": "t6",
       "name": "MySQL & Database Design",
       "abridger": "MDD",
       "description": "Kiến thức về thiết kế CSDL quan hệ, chuẩn hóa và truy vấn SQL.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 1,
+      "durationMinutes": 15
     },
     {
       "id": "t7",
       "name": "Automated Testing",
       "abridger": "AT",
       "description": "Các khái niệm về kiểm thử tự động với Selenium và Postman.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 0,
+      "durationMinutes": 45
     },
     {
       "id": "t8",
       "name": "Computer Vision Basics",
       "abridger": "CVB",
       "description": "Tổng quan về thị giác máy tính và ứng dụng trong công nghiệp 4.0.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 1,
+      "durationMinutes": 0
     },
     {
       "id": "t9",
       "name": "TOEIC Reading (Part 6 & 7)",
       "abridger": "TR",
       "description": "Luyện tập kỹ năng đọc hiểu văn bản tiếng Anh chuyên ngành.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 0,
+      "durationMinutes": 20
     },
     {
       "id": "t10",
       "name": "Git & GitHub Workflow",
       "abridger": "GGW",
       "description": "Quản lý mã nguồn, xử lý conflict và làm việc nhóm hiệu quả.",
-      "questionCount": 0
+      "questionCount": 0,
+      "durationHours": 0,
+      "durationMinutes": 15
     }
   ],
   "questions": [

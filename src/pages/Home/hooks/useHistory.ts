@@ -21,8 +21,7 @@ export const useHistory = (userId: string) => {
         const submissionsRes = await submissionApi.getByUserId(userId);
         const submissions = submissionsRes.data as ApiSubmission[];
 
-        const topicsRes = await topicApi.getAll();
-        const topics = topicsRes.data as ApiTopic[];
+        const topics = (await topicApi.getAll()) as ApiTopic[];
         const topicMap = new Map(topics.map((t) => [t.id, t]));
 
         const enriched: HistoryItem[] = submissions.map((sub) => {
