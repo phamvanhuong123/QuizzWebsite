@@ -1,19 +1,34 @@
 import React from 'react';
 import { ChevronRight, Bell, Settings } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 const Header: React.FC = () => {
+  const location = useLocation();
+  
+  // Lấy các phần của URL 
+  const pathSegments = location.pathname.split('/').filter(Boolean);
+  
+  // Lấy phần tử cuối cùng làm tên trang (nếu không có thì mặc định là Dashboard)
+  const currentPage = pathSegments[pathSegments.length - 1] || 'Dashboard';
+  
+  // Viết hoa chữ cái đầu và đổi dấu gạch ngang thành dấu cách 
+  const formattedTitle = currentPage.charAt(0).toUpperCase() + currentPage.replace(/-/g, ' ').slice(1);
+
   return (
-    // Thay px-8 bằng px-4 để linh hoạt hơn, bỏ h-16 vì AdminLayout đã bọc ngoài
     <div className="flex-1 flex items-center justify-between h-16 px-2 lg:px-6 transition-colors">
       
-      {/* Breadcrumbs - Ẩn bớt trên mobile cho đỡ chật */}
+      {/* Breadcrumbs - Đã được làm Dynamic */}
       <nav className="flex items-center text-sm font-medium">
-        <span className="hidden sm:inline text-slate-500 dark:text-slate-400">Admin</span>
+        <span className="hidden sm:inline text-slate-500 dark:text-slate-400 capitalize">
+          {pathSegments[0] || 'Admin'}
+        </span>
         <ChevronRight className="hidden sm:block w-4 h-4 mx-2 text-slate-300" />
-        <span className="text-slate-900 dark:text-slate-100 font-bold">Users</span>
+        {/* Đổ biến formattedTitle vào */}
+        <span className="text-slate-900 dark:text-slate-100 font-bold">
+          {formattedTitle}
+        </span>
       </nav>
 
-      {/* Right Actions */}
       <div className="flex items-center gap-1 sm:gap-3">
         <button className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl relative">
           <Bell size={20} />
@@ -24,10 +39,9 @@ const Header: React.FC = () => {
           <Settings size={20} />
         </button>
 
-        {/* Thanh ngăn cách và User Info (Chỉ hiện từ màn hình lớn) */}
+        {/* Thanh ngăn cách và User Info */}
         <div className="hidden sm:block h-6 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2"></div>
-        
-        {/* Bạn có thể gắn Component UserMenu của bạn vào đây */}
+      
       </div>
     </div>
   );

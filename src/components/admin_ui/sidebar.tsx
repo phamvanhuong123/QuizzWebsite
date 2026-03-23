@@ -1,14 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router';
-// Thêm icon X để đóng sidebar trên mobile
-import { School, Layers, HelpCircle, Users, X } from 'lucide-react'; 
+import { NavLink } from 'react-router-dom';
+import { School, Layers, HelpCircle, Users, LogOut, X } from 'lucide-react';
 
-// --- BƯỚC QUAN TRỌNG: Khai báo Interface ---
 interface SidebarProps {
-  onClose?: () => void; // Dấu ? nghĩa là có truyền vào hay không cũng được
+  onClose?: () => void; 
 }
 
-// Thêm { onClose } vào tham số của component
 const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   
   const navLinkClass = ({ isActive }: { isActive: boolean }) => 
@@ -21,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   return (
     <aside className="h-full w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col relative shadow-xl lg:shadow-none">
       
-      {/* Nút đóng (X) - Chỉ hiển thị trên Mobile/Tablet */}
+      {/* Nút đóng cho Mobile */}
       <button 
         onClick={onClose}
         className="lg:hidden absolute right-4 top-5 p-2 text-slate-400 hover:text-slate-600 transition-colors"
@@ -29,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
         <X size={20} />
       </button>
 
-      {/* Phần Header Sidebar */}
+      {/* Header Sidebar */}
       <div className="p-6 flex items-center gap-3">
         <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary/20">
           <School size={22} strokeWidth={2.5} />
@@ -42,7 +39,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
 
       {/* Navigation Links */}
       <nav className="flex-1 px-4 space-y-1.5 mt-4">
-        {/* Quan trọng: Khi bấm vào link trên mobile thì phải đóng sidebar lại */}
         <NavLink to="/admin/topics" onClick={onClose} className={navLinkClass}>
           <Layers className="w-5 h-5" />
           <span className="text-sm font-medium">Topics</span>
@@ -55,12 +51,35 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
 
         <NavLink to="/admin/users" onClick={onClose} className={navLinkClass}>
           <Users className="w-5 h-5" />
-          <span className="text-sm font-medium text-[13px]">Users</span>
+          <span className="text-sm font-medium">Users</span>
         </NavLink>
       </nav>
 
-      {/* Sidebar Footer (Giữ nguyên phần User của bạn) */}
-      {/* ... */}
+      <div className="p-4 border-t border-slate-100 dark:border-slate-800/50">
+        <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50/50 dark:bg-slate-800/30 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all group">
+          {/* Avatar Admin */}
+          <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden ring-2 ring-white dark:ring-slate-800 shrink-0">
+            <img 
+              alt="Admin Profile" 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jane" 
+            />
+          </div>
+          
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-slate-900 dark:text-white truncate uppercase">Jane Cooper</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-medium uppercase">Super Admin</p>
+          </div>
+
+          {/* Logout Button */}
+          <button 
+            title="Logout"
+            className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
+      </div>
     </aside>
   );
 };

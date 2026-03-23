@@ -1,16 +1,23 @@
 import instance from "@/utils/instanceAxios";
 
-
 const login = async (email : string, password : string)=> {
     const res = await instance.get('users',{
-        params : {
-            email : email,
-            password : password
-        }
+        params : { email: email, password: password }
     })
     return res.data.length > 0 ? res.data[0] : null;
 }
 
+// Bổ sung 2 hàm này
+const getAllUsers = () => {
+    return instance.get('/users');
+}
+
+const getAllSubmissions = () => {
+    return instance.get('/submissions');
+}
+
 export const userApi = {
-    login
+    login,
+    getAllUsers,          
+    getAllSubmissions     
 }

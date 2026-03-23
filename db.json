@@ -177,14 +177,14 @@
     {
       "id": "q1",
       "topicId": "t1",
-      "correctAnswer": 1,
       "question": "Hook nào được sử dụng để gọi API khi Component vừa được render lần đầu tiên?",
       "answers": [
         "useState",
         "useEffect",
         "useContext",
         "useMemo"
-      ]
+      ],
+      "correctAnswer": 1
     },
     {
       "id": "q2",
@@ -451,5 +451,6 @@
         }
       ]
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
