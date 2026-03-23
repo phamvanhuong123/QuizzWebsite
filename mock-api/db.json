@@ -5,85 +5,68 @@
       "fullName": "System Admin",
       "email": "admin@gmail.com",
       "password": "123a",
-      "role": "admin",
-      "token": "admin_token_xyz"
+      "role": "admin"
     },
     {
       "id": "u1",
       "fullName": "Hương",
       "email": "huong@gmail.com",
       "password": "123a",
-      "role": "user",
-      "token": "user_token_abc"
+      "role": "user"
     },
     {
       "id": "u2",
       "fullName": "Phạm Văn Hà",
       "email": "ha.pham@gmail.com",
       "password": "123a",
-      "role": "user",
-      "token": "user_token_def"
+      "role": "user"
     },
     {
       "id": "u3",
       "fullName": "Nguyễn Minh Tuấn",
       "email": "tuan.nguyen@gmail.com",
       "password": "123s",
-      "role": "user",
-      "token": "user_token_ghi"
+      "role": "user"
     },
     {
       "id": "u4",
       "fullName": "Trần Thị Lan",
       "email": "lan.tran@gmail.com",
       "password": "123s",
-      "role": "user",
-      "token": "user_token_jkl"
+      "role": "user"
     },
     {
       "id": "u5",
       "fullName": "Lê Hoàng Bách",
       "email": "bach.le@gmail.com",
       "password": "123d",
-      "role": "userdas",
-      "token": "user_token_mno"
+      "role": "user"
     },
     {
       "id": "u6",
       "fullName": "Đỗ Thu Trang",
       "email": "trang.do@gmail.com",
       "password": "123aaa",
-      "role": "user",
-      "token": "user_token_pqr"
+      "role": "user"
     },
     {
       "id": "u7",
       "fullName": "Vũ Hải Đăng",
       "email": "dang.vu@gmail.com",
       "password": "123ddd",
-      "role": "user",
-      "token": "user_token_stu"
+      "role": "user"
     },
     {
       "id": "u8",
       "fullName": "Bùi Ngọc Ánh",
       "email": "anh.bui@gmail.com",
       "password": "123d",
-      "role": "user",
-      "token": "user_token_vwx"
-    },
-    {
-      "id": "u9",
-      "fullName": "Hoàng Đức Phát",
-      "email": "phat.hoang@gmail.com",
-      "password": "123",
-      "role": "user",
-      "token": "user_token_yz"
+      "role": "user"
     }
   ],
   "topics": [
     {
-      "name": "ReactJS Fundamentals",
+      "name": "ReactJS Fundamentalss",
       "abridger": "RF",
       "description": "Kiểm tra kiến thức cơ bản về React, Hooks và Component Lifecycle.",
       "durationHours": 1,
@@ -168,7 +151,7 @@
       "name": "Git & GitHub Workflow",
       "abridger": "GGW",
       "description": "Quản lý mã nguồn, xử lý conflict và làm việc nhóm hiệu quả.",
-      "questionCount": 1,
+      "questionCount": 0,
       "durationHours": 0,
       "durationMinutes": 15
     }
@@ -189,26 +172,26 @@
     {
       "id": "q2",
       "topicId": "t1",
-      "correctAnswer": 2,
       "question": "Làm thế nào để truyền dữ liệu từ Component cha xuống Component con trong React?",
       "answers": [
         "Sử dụng State",
         "Sử dụng Redux",
         "Sử dụng Props",
         "Sử dụng Context API"
-      ]
+      ],
+      "correctAnswer": 1
     },
     {
       "id": "q3",
       "topicId": "t1",
-      "correctAnswer": 0,
       "question": "Quy tắc cốt lõi khi cập nhật State trong React là gì?",
       "answers": [
         "Không được mutate (thay đổi trực tiếp) State hiện tại",
         "State có thể thay đổi trực tiếp qua biến thông thường",
         "Phải dùng vòng lặp for để đổi State",
         "State chỉ dùng trong Class Component"
-      ]
+      ],
+      "correctAnswer": 1
     },
     {
       "id": "q4",
@@ -285,26 +268,14 @@
     {
       "id": "q10",
       "topicId": "t2",
+      "correctAnswer": 1,
       "question": "Template Literals sử dụng ký tự nào để bọc chuỗi?",
       "answers": [
         "Nháy đơn (' ')",
         "Backtick (` `)",
         "Nháy kép (\" \")",
         "Ngoặc vuông ([ ])"
-      ],
-      "correctAnswer": 1
-    },
-    {
-      "id": "q1774231548419",
-      "topicId": "t10",
-      "question": "Câu lệnh nào thường được dùng để lấy code từ repo về máy trong lần đầu tiên",
-      "answers": [
-        "git fetch",
-        "git pull",
-        "git status",
-        "git clone"
-      ],
-      "correctAnswer": 3
+      ]
     }
   ],
   "submissions": [

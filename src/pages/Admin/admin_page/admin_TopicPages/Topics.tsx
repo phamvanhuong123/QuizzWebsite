@@ -25,7 +25,8 @@ const Topics: React.FC = () => {
     try {
       setLoading(true);
       const data = await topicApi.getAll();
-      setTopics(data);
+      const sortedData = data.sort((a, b) => b.questionCount - a.questionCount);
+      setTopics(sortedData);
       setError(null);
     } catch {
       setError("Failed to load topics. Please try again later.");
