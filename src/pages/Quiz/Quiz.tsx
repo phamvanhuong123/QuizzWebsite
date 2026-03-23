@@ -1,16 +1,37 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { questionApi } from "@/apis/questionApi";
 import Header from "./Header/Header";
 import type { Question, UserAnser } from "@/types/quiz.types";
 import Content from "./Content/Content";
+import type { SubmissionPayload } from "@/types/submission.types";
+import { submissionApi } from "@/apis/submissionApi";
+
+const calculateResultsHelper = (
+  questions: Question[],
+  answers: UserAnser[],
+) => {
+  let correctCount = 0;
+  answers.forEach((answer) => {
+    const question = questions.find((q) => q.id === answer.idQuestion);
+
+    if (question?.correctAnswer === answer.selectAnswer) correctCount += 1;
+  });
+
+  const percentage = (correctCount / questions.length) * 100;
+  return {
+    totalCorrect: correctCount,
+    scorePercentage: Math.round(percentage)
+  };
+};
 
 function Quiz() {
   const { topicId } = useParams();
+  const { id } = JSON.parse(localStorage.getItem("user")!);
   const [dataQuestion, setDataQuestion] = useState<Question[]>([]);
   const [userAnswers, setUserAnswers] = useState<UserAnser[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const navigate = useNavigate()
   const selectedCurrentAnswer =
     userAnswers.find(
       (answer) => answer.idQuestion === dataQuestion[currentIndex].id,
@@ -41,20 +62,41 @@ function Quiz() {
     setCurrentIndex(prevIndex);
   };
 
-  const handleSubmit = ()=> {
-    console.log(userAnswers)
-  }
+  const handleSubmit = async () => {
+    const { scorePercentage, totalCorrect} = calculateResultsHelper(dataQuestion,userAnswers)
+    const payload: SubmissionPayload = {
+      userId: id,
+      topicId: topicId!,
+      totalCorrect: totalCorrect,
+      scorePercentage: scorePercentage,
+      totalQuestions: userAnswers.length,
+      submittedAt: new Date(),
+      answers: userAnswers.map((userAnswer) => {
+        return {
+          questionId: userAnswer.idQuestion,
+          selectedAnswer: userAnswer.selectAnswer,
+        };
+      }),
+    };
+    const response = await submissionApi.create(payload);
+    navigate(`/quiz/result/${response.id}`)
+  };
   useEffect(() => {
     const fetchApi = async () => {
       const result = await questionApi.getByTopicId(topicId || "");
       setDataQuestion(result.data);
     };
     fetchApi();
-  }, [setDataQuestion, topicId]);
+  }, [topicId]);
   return (
     <div className="min-h-screen bg-[#f8f6f6] dark:bg-[#221610] font-sans text-slate-900 dark:text-slate-100 flex flex-col">
       {/* Top Navigation Bar */}
-      <Header currentIndex={currentIndex} dataQuestion={dataQuestion} topicId={topicId || null} handleSubmit={handleSubmit} />
+      <Header
+        currentIndex={currentIndex}
+        dataQuestion={dataQuestion}
+        topicId={topicId || null}
+        handleSubmit={handleSubmit}
+      />
       {/* Main Content */}
       <Content
         dataQuestion={dataQuestion}

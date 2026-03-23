@@ -13,6 +13,7 @@ import PermissionRoute from "./PermissionRoute";
 import { permissions } from "@/constants/rolePermission";
 import UnauthorizedRoute from "./UnAuthorizeRoute";
 import Profile from "@/pages/Profile/Profile";
+import QuizResult from "@/pages/QuizResult/QuizResult";
 
 function ClientRoutes() {
   return (
@@ -27,6 +28,7 @@ function ClientRoutes() {
         <Route path="/home" element={<Home />} />
         <Route path="/result-detail" element={<ResultDetail />} />
         <Route path="/quiz/:topicId" element={<Quiz />} />
+        <Route path="/quiz/result/:submissionId" element={<QuizResult/>}/>
         <Route
           element={
             <PermissionRoute requirePermission={permissions.VIEW_ADMIN} />

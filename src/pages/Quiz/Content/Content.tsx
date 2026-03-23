@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import type { Question } from "@/types/quiz.types";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import SubmitQuizButton from "./SubmitQuizButton/SubmitQuizButton";
 const answerLabels = ["A", "B", "C", "D"];
 
 interface ContentProps{
@@ -97,10 +98,7 @@ function Content({
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="cursor-pointer bg-[#ec5b13] hover:bg-[#ec5b13]/90 text-white font-bold  rounded-xl shadow-lg shadow-[#ec5b13]/20">
-                Submit
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+             <SubmitQuizButton onSubmit={handleSubmit} />
             )}
           </CardFooter>
         </Card>

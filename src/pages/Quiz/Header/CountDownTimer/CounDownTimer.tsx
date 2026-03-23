@@ -11,7 +11,6 @@ interface CountdownTimerProps {
 
 function CountDownTimer({
   initialTime,
-  topicId,
   handleSubmit,
 }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState(initialTime);
@@ -43,13 +42,14 @@ function CountDownTimer({
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
+   
     return () => {
       if (intervalRef.current !== null) {
         clearInterval(intervalRef.current);
       }
     };
+
   }, []);
-  
   useEffect(() => {
     if (timeLeft === 0) {
       if (intervalRef.current !== null) {

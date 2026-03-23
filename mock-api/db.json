@@ -454,6 +454,126 @@
           "selectedAnswer": 1
         }
       ]
+    },
+    {
+      "id": "fe5b",
+      "userId": "u1",
+      "topicId": "t1",
+      "totalCorrect": 1,
+      "scorePercentage": 20,
+      "totalQuestions": 5,
+      "submittedAt": "2026-03-23T08:30:22.552Z",
+      "answers": [
+        {
+          "questionId": "q1",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q5",
+          "selectedAnswer": 3
+        }
+      ]
+    },
+    {
+      "id": "40f8",
+      "userId": "u1",
+      "topicId": "t1",
+      "totalCorrect": 1,
+      "scorePercentage": 20,
+      "totalQuestions": 4,
+      "submittedAt": "2026-03-23T08:48:46.205Z",
+      "answers": [
+        {
+          "questionId": "q1",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 3
+        }
+      ]
+    },
+    {
+      "id": "0193",
+      "userId": "u1",
+      "topicId": "t1",
+      "totalCorrect": 0,
+      "scorePercentage": 0,
+      "totalQuestions": 5,
+      "submittedAt": "2026-03-23T08:55:30.143Z",
+      "answers": [
+        {
+          "questionId": "q1",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q5",
+          "selectedAnswer": 3
+        }
+      ]
+    },
+    {
+      "id": "bf57",
+      "userId": "u1",
+      "topicId": "t1",
+      "totalCorrect": 1,
+      "scorePercentage": 20,
+      "totalQuestions": 5,
+      "submittedAt": "2026-03-23T08:57:19.469Z",
+      "answers": [
+        {
+          "questionId": "q1",
+          "selectedAnswer": 1
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q5",
+          "selectedAnswer": 3
+        }
+      ]
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

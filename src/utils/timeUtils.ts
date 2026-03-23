@@ -14,6 +14,11 @@ const convertNumberToTime = (number : number) => {
     return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`
 }
 
+const convertTimeToNumber = (hours : number,seconds : number) => {
+    return (hours * 3600) + (seconds * 60)
+}
+
 export const timeUtils = {
-    convertNumberToTime
+    convertNumberToTime,
+    convertTimeToNumber
 }
