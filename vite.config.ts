@@ -8,6 +8,11 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  server: {
+    watch: {
+      ignored: ['**/mock-api/**']
+    }
+  },
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),
