@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import type { ApiSubmission, ApiTopic } from "@/types/api.types";
 import { format } from "date-fns";
+import { ClipboardClock } from "lucide-react";
 
 interface SubmissionHistoryProps {
   submissions: ApiSubmission[];
@@ -42,9 +43,7 @@ const SubmissionHistory: React.FC<SubmissionHistoryProps> = ({
       {submissions.length === 0 ? (
         <div className="p-12 flex flex-col items-center justify-center text-center gap-4">
           <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
-            <span className="material-symbols-outlined text-slate-400 text-3xl">
-              history
-            </span>
+            <ClipboardClock className="text-slate-400 text-5xl" />
           </div>
           <div className="space-y-1">
             <p className="font-bold text-lg">No quizzes attempted yet</p>
