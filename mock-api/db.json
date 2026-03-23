@@ -151,9 +151,18 @@
       "name": "Git & GitHub Workflow",
       "abridger": "GGW",
       "description": "Quản lý mã nguồn, xử lý conflict và làm việc nhóm hiệu quả.",
-      "questionCount": 0,
+      "questionCount": 1,
       "durationHours": 0,
       "durationMinutes": 15
+    },
+    {
+      "name": "MongoDB & Database Design",
+      "abridger": "MGB",
+      "description": "Làm thế nào để thiết kế và xây dựng database với MongoDB",
+      "durationHours": 0,
+      "durationMinutes": 30,
+      "questionCount": 0,
+      "id": "G4_qQRohB1w"
     }
   ],
   "questions": [
@@ -276,6 +285,18 @@
         "Nháy kép (\" \")",
         "Ngoặc vuông ([ ])"
       ]
+    },
+    {
+      "id": "XojgbO52TI8",
+      "topicId": "t10",
+      "question": "Câu lệnh nào sau đây được dùng để đẩy code từ local lên repo",
+      "answers": [
+        "git clone",
+        "git pull",
+        "git fetch",
+        "git push"
+      ],
+      "correctAnswer": 3
     }
   ],
   "submissions": [
