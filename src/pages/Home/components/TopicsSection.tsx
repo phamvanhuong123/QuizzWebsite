@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +18,8 @@ const TopicsSection: React.FC<TopicsSectionProps> = ({ topics }) => {
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const availableTopics = topics.filter((topic) => topic.questionCount > 0);
+
   const getColorClasses = (index: number) => {
     const colors = [
       { text: "text-primary", bg: "bg-blue-50 dark:bg-blue-900/20" },
@@ -28,7 +29,22 @@ const TopicsSection: React.FC<TopicsSectionProps> = ({ topics }) => {
     return colors[index % colors.length];
   };
 
-  const displayedTopics = topics.slice(0, 3);
+  const displayedTopics = availableTopics.slice(0, 3);
+
+  if (availableTopics.length === 0) {
+    return (
+      <section className="mb-12">
+        <div className="flex flex-col gap-1 mb-8">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Available Topics
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400">
+            No topics available at the moment. Please check back later.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="mb-12">
@@ -42,63 +58,65 @@ const TopicsSection: React.FC<TopicsSectionProps> = ({ topics }) => {
           </p>
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger>
-            <Button variant="outline" className="gap-2">
-              <Eye className="w-4 h-4" />
-              View all topics
-            </Button>
-          </DialogTrigger>
-
-          <DialogContent className="w-[95vw] sm:w-[90vw] lg:max-w-6xl max-h-[85vh] p-6 overflow-hidden">
-            <DialogHeader>
-              <DialogTitle>All Topics</DialogTitle>
-            </DialogHeader>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
-              {topics.map((topic, index) => {
-                const { text, bg } = getColorClasses(index);
-                return (
-                  <div
-                    key={topic.id}
-                    className="flex flex-col bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 shadow-sm"
-                  >
-                    <div className="flex items-center gap-3 mb-3">
-                      <div
-                        className={`w-10 h-10 rounded-lg ${bg} flex items-center justify-center ${text}`}
-                      >
-                        <span className="material-symbols-outlined text-lg">
-                          {topic.abridger}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-slate-900 dark:text-white truncate">
-                          {topic.name}
-                        </h3>
-                        <p className="text-xs text-slate-500">
-                          {topic.questionCount} questions
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
-                      {topic.description}
-                    </p>
-                    <Button
-                      onClick={() => {
-                        navigate(`/quiz/${topic.id}`);
-                        setIsDialogOpen(false);
-                      }}
-                      className="w-full mt-auto"
-                      size="sm"
-                    >
-                      Start Quiz <ArrowRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
-          </DialogContent>
-        </Dialog>
+        <Button
+          variant="outline"
+          className="gap-2"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          <Eye className="w-4 h-4" />
+          View all topics
+        </Button>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="w-[95vw] sm:w-[90vw] lg:max-w-6xl max-h-[85vh] p-6 overflow-hidden">
+          <DialogHeader>
+            <DialogTitle>All Topics</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+            {availableTopics.map((topic, index) => {
+              const { text, bg } = getColorClasses(index);
+              return (
+                <div
+                  key={topic.id}
+                  className="flex flex-col bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 shadow-sm"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div
+                      className={`w-10 h-10 rounded-lg ${bg} flex items-center justify-center ${text}`}
+                    >
+                      <span className="material-symbols-outlined text-lg">
+                        {topic.abridger}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-slate-900 dark:text-white truncate">
+                        {topic.name}
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        {topic.questionCount} questions
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
+                    {topic.description}
+                  </p>
+                  <Button
+                    onClick={() => {
+                      navigate(`/quiz/${topic.id}`);
+                      setIsDialogOpen(false);
+                    }}
+                    className="w-full mt-auto"
+                    size="sm"
+                  >
+                    Start Quiz <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {displayedTopics.map((topic, index) => {
