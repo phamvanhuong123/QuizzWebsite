@@ -89,7 +89,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ result }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className=" gap-4">
             <div
               className={`${scoreColor.bg} p-4 rounded-xl border ${scoreColor.border}/20`}
             >
@@ -98,14 +98,6 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ result }) => {
               </p>
               <p className={`text-2xl font-bold ${scoreColor.text}`}>
                 {result.totalCorrect} / {result.totalQuestions}
-              </p>
-            </div>
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-              <p className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-semibold">
-                Total Time
-              </p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                {result.totalTime}
               </p>
             </div>
           </div>
