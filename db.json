@@ -168,7 +168,7 @@
       "name": "Git & GitHub Workflow",
       "abridger": "GGW",
       "description": "Quản lý mã nguồn, xử lý conflict và làm việc nhóm hiệu quả.",
-      "questionCount": 0,
+      "questionCount": 1,
       "durationHours": 0,
       "durationMinutes": 15
     }
@@ -285,14 +285,26 @@
     {
       "id": "q10",
       "topicId": "t2",
-      "correctAnswer": 1,
       "question": "Template Literals sử dụng ký tự nào để bọc chuỗi?",
       "answers": [
         "Nháy đơn (' ')",
         "Backtick (` `)",
         "Nháy kép (\" \")",
         "Ngoặc vuông ([ ])"
-      ]
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "id": "q1774231548419",
+      "topicId": "t10",
+      "question": "Câu lệnh nào thường được dùng để lấy code từ repo về máy trong lần đầu tiên",
+      "answers": [
+        "git fetch",
+        "git pull",
+        "git status",
+        "git clone"
+      ],
+      "correctAnswer": 3
     }
   ],
   "submissions": [
