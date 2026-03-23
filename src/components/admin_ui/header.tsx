@@ -30,15 +30,6 @@ const Header: React.FC = () => {
       </nav>
 
       <div className="flex items-center gap-1 sm:gap-3">
-        <button className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl relative">
-          <Bell size={20} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 border-2 border-white dark:border-slate-900 rounded-full"></span>
-        </button>
-
-        <button className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">
-          <Settings size={20} />
-        </button>
-
         {/* Thanh ngăn cách và User Info */}
         <div className="hidden sm:block h-6 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2"></div>
       

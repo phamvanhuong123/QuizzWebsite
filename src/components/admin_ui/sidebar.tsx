@@ -1,12 +1,49 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { School, Layers, HelpCircle, Users, LogOut, X } from 'lucide-react';
 
 interface SidebarProps {
   onClose?: () => void; 
 }
 
+// Định nghĩa interface cho User để Typescript hỗ trợ tốt hơn
+interface UserData {
+  id: string;
+  fullName: string;
+  email: string;
+  role: string;
+}
+
 const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
+
+  // Lấy thông tin user từ localStorage khi component render
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedData = JSON.parse(storedUser);
+
+        if (Array.isArray(parsedData) && parsedData.length > 0) {
+          setCurrentUser(parsedData[0]);
+        } else {
+          setCurrentUser(parsedData); 
+        }
+      } catch (error) {
+        console.error("Lỗi khi đọc dữ liệu user:", error);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    //  Xóa thông tin đăng nhập
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    
+    // Chuyển hướng về trang Login
+    navigate('/login'); 
+  };
   
   const navLinkClass = ({ isActive }: { isActive: boolean }) => 
     `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
@@ -16,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
     }`;
 
   return (
-    <aside className="h-full w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col relative shadow-xl lg:shadow-none">
+    <aside className="h-screen sticky top-0 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shadow-xl lg:shadow-none">
       
       {/* Nút đóng cho Mobile */}
       <button 
@@ -55,24 +92,31 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
         </NavLink>
       </nav>
 
+      {/* Footer Profile & Logout */}
       <div className="p-4 border-t border-slate-100 dark:border-slate-800/50">
         <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50/50 dark:bg-slate-800/30 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all group">
           {/* Avatar Admin */}
           <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden ring-2 ring-white dark:ring-slate-800 shrink-0">
             <img 
               alt="Admin Profile" 
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jane" 
+              // Tạo avatar động dựa trên tên user, nếu chưa có tên thì dùng avatar mặc định
+              src={`https://api.dicebear.com/7.x/initials/svg?seed=${currentUser?.fullName || 'Admin'}`} 
             />
           </div>
           
-          {/* Info */}
+          {/* Info - Hiển thị dữ liệu thật */}
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-slate-900 dark:text-white truncate uppercase">Jane Cooper</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-medium uppercase">Super Admin</p>
+            <p className="text-xs font-bold text-slate-900 dark:text-white truncate uppercase">
+              {currentUser?.fullName || 'System Admin'}
+            </p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-medium uppercase">
+              {currentUser?.role || 'Admin'}
+            </p>
           </div>
 
           {/* Logout Button */}
           <button 
+            onClick={handleLogout}
             title="Logout"
             className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
           >
