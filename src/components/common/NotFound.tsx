@@ -19,27 +19,6 @@ const NotFound: React.FC = () => {
           </h2>
         </div>
 
-        <nav className="hidden md:flex items-center gap-8">
-          <a
-            className="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors"
-            href="#"
-          >
-            Courses
-          </a>
-          <a
-            className="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors"
-            href="#"
-          >
-            Quizzes
-          </a>
-          <a
-            className="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors"
-            href="#"
-          >
-            Leaderboard
-          </a>
-        </nav>
-
         <div className="flex items-center gap-4">
           <button className="p-2 text-slate-500 hover:text-primary transition-colors">
             <Bell />
