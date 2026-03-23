@@ -574,6 +574,33 @@
           "selectedAnswer": 3
         }
       ]
+    },
+    {
+      "id": "5a12",
+      "userId": "u1",
+      "topicId": "t1",
+      "totalCorrect": 0,
+      "scorePercentage": 0,
+      "totalQuestions": 4,
+      "submittedAt": "2026-03-23T09:17:03.033Z",
+      "answers": [
+        {
+          "questionId": "q1",
+          "selectedAnswer": 0
+        },
+        {
+          "questionId": "q2",
+          "selectedAnswer": 3
+        },
+        {
+          "questionId": "q3",
+          "selectedAnswer": 2
+        },
+        {
+          "questionId": "q4",
+          "selectedAnswer": 2
+        }
+      ]
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
