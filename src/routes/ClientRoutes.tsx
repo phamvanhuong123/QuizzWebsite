@@ -12,20 +12,26 @@ import PrivateRoute from "./PrivateRoute";
 import PermissionRoute from "./PermissionRoute";
 import { permissions } from "@/constants/rolePermission";
 import UnauthorizedRoute from "./UnAuthorizeRoute";
+import Profile from "@/pages/Profile/Profile";
 
 function ClientRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to={"/home"} />} />
-      <Route element={<UnauthorizedRoute/>}>
+      <Route element={<UnauthorizedRoute />}>
         <Route path="/login" element={<Auth />} />
       </Route>
       <Route path="/register" element={<Auth />} />
       <Route element={<PrivateRoute />}>
+        <Route path="/profile" element={<Profile />} />
         <Route path="/home" element={<Home />} />
         <Route path="/result-detail" element={<ResultDetail />} />
         <Route path="/quiz/:topicId" element={<Quiz />} />
-        <Route element={<PermissionRoute requirePermission= {permissions.VIEW_ADMIN}/>}>
+        <Route
+          element={
+            <PermissionRoute requirePermission={permissions.VIEW_ADMIN} />
+          }
+        >
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Topics />} />
             <Route path="topics" element={<Topics />} />
