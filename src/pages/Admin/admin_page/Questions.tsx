@@ -71,7 +71,7 @@ const Questions: React.FC = () => {
         ]);
 
         const rawQuestions: Question[] = questionsRes.data;
-        const rawTopics: Topic[] = topicsRes.data;
+        const rawTopics: Topic[] = topicsRes;
 
         setTopics(rawTopics);
 
